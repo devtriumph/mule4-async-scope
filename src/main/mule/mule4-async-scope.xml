@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="insert-data-to-products-db" doc:id="de6e8d22-5117-471f-a9e7-9a9ff15553c0" >
+        <ee:transform doc:name="Wait a Minute" doc:id="d3b06138-5654-475b-bb76-71b0bbc08ab4" >
+            <ee:message >
+                <ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::Runtime
+output application/json
+---
+payload wait 60000]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <logger level="INFO" doc:name="Log Payload" doc:id="e5d03535-dc4a-486b-8b2d-47ce19e3c930" message="#[payload]" />
+    </flow>
+    <flow name="mule4-async-scope-flow" doc:id="3324c626-3ae8-440f-bb79-1b49a3498df5" >
+        <http:listener doc:name="GET:/Products" doc:id="424e4d0b-ec2f-4e2c-84d0-e8181ecf145d" config-ref="HTTP_Listener_Config" path="/products"/>
+        <logger level="INFO" doc:name="Flow Start" doc:id="888822aa-a72c-454f-8f8c-fafc453739b4" message='#["Flow Started"]'/>
+        <http:request method="GET" doc:name="GET:/Products API" doc:id="4d7fe24b-d58f-4320-9755-46216e95d47e" config-ref="HTTP_Products_API" path="/${productsAPI.path}"/>
+        <async doc:name="Async" doc:id="9e173b5e-b7d6-4754-a3cb-f2408141029e" >
+            <flow-ref doc:name="Push Products to Database" doc:id="a84ff618-28df-4d7f-a890-6386035b25c8" name="insert-data-to-products-db" />
+        </async>
+        <logger level="INFO" doc:name="Flow End" doc:id="22f3b7b3-18e1-4c05-839e-43da6e22dafe" message='#["Flow Ended"]'/>
+    </flow>
+</mule>

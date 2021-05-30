@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <http:listener-config name="HTTP_Listener_Config" doc:name="HTTP Listener config" doc:id="4f3ccdc7-20fb-4381-a9fa-e65576fd187d" >
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+    <http:request-config name="HTTP_Products_API" doc:name="HTTP Request configuration" doc:id="19707c48-7291-4b64-850d-1251b8dc8335" >
+        <http:request-connection protocol="HTTPS" host="${productsAPI.host}" port="${productsAPI.port}" />
+    </http:request-config>
+    <configuration-properties doc:name="Configuration properties" doc:id="58eca951-5fa4-4be8-b3dd-c82f87809ee5" file="devtriumph-dev.yaml" />
+</mule>
